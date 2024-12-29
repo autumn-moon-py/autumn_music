@@ -34,6 +34,18 @@ class SongManager {
     Global.log.d("歌单初始化,获取缓存歌单：${playlist.length}");
   }
 
+  static void songInit() {
+    if (playlist.isEmpty) {
+      Global.log.d("没有歌曲");
+      return;
+    }
+    nowSongModel.value = playlist.first;
+    if (playMode.value == PlayMode.shuffle) {
+      nextShuffleIndex = Random().nextInt(playlist.length);
+    }
+    updatePlayingWindow();
+  }
+
   static Future<void> getCloudSongs() async {
     if (tempList.isEmpty) return;
     Global.log.d("开始转换云歌曲模型");
@@ -59,19 +71,6 @@ class SongManager {
     }
     Global.log.d("云歌曲模型转换完成");
     tempList.clear();
-    // clearSongPath();
-  }
-
-  static Future<void> songInit() async {
-    if (playlist.isEmpty) {
-      Global.log.d("没有歌曲");
-      return;
-    }
-    nowSongModel.value = playlist.first;
-    if (playMode.value == PlayMode.shuffle) {
-      nextShuffleIndex = Random().nextInt(playlist.length);
-    }
-    updatePlayingWindow();
   }
 
   static void changeSong(SongModel model) {
@@ -81,7 +80,7 @@ class SongManager {
     updatePlayingWindow();
   }
 
-  static Future<void> play() async {
+  static Future<void> startPlay() async {
     final model = nowSongModel.value;
     await model.init();
     await model.player?.seek(Duration.zero);
@@ -159,7 +158,7 @@ class SongManager {
       playlist[nextIndex].init();
     }
     if (playMode.value != PlayMode.single || currentIndex.value != nextIndex) {
-      await play();
+      await startPlay();
     }
   }
 
@@ -187,7 +186,7 @@ class SongManager {
     Global.log.d("当前播放模式:${playMode.value}");
   }
 
-  static Future<void> clear() async {
+  static void clear() {
     tempList.clear();
     currentIndex(0);
     nowSongModel(SongModel());

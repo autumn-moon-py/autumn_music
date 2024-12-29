@@ -1,8 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'small_widgets.dart';
-
 typedef GestureOnTapChangeCallback = void Function(bool tapState);
 
 extension StyledWidget on Widget {
@@ -329,5 +327,5 @@ extension StyledWidget on Widget {
     Key? key,
     bool show = false,
   }) =>
-      !show ? sb() : this;
+      !show ? SizedBox() : this;
 }

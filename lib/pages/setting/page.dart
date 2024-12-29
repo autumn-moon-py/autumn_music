@@ -79,6 +79,7 @@ class _SettingPageState extends State<SettingPage> {
           cacheValue: songCache.value,
           cleaning: songCacheCleanging.value,
           onTap: () async {
+            SongManager.player?.dispose();
             songCacheCleanging(true);
             await CacheTool.deleteFiles(songCacheList);
             songCacheCleanging(false);
@@ -133,8 +134,11 @@ class _SettingPageState extends State<SettingPage> {
       }),
       onTap: () async {
         Global.t.p();
-        await SongManager.clear();
-        await Global.cloudInit();
+        SongManager.clear();
+        final r2 = R2Cloud();
+        await r2.init();
+        SongManager.tempList = await r2.getSongList();
+        await SongManager.getCloudSongs();
         Global.t.cancel();
       },
     );

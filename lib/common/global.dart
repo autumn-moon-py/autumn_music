@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:music/core/manager/song_manager.dart';
 import 'package:music/core/models/song_model.dart';
-import 'package:music/core/service/r2.dart';
 import 'package:music/utils/music_tools.dart';
 import 'package:music/utils/toast.dart';
 import 'package:window_manager/window_manager.dart';
@@ -18,6 +18,8 @@ class Global {
   static final log = MyLogger();
   static final t = Toast();
 
+  static MyAudioHandler? audioHandler;
+
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await windowsInit();
@@ -27,7 +29,7 @@ class Global {
     await audioActionInit();
     await backgroundInit();
     await SongManager.init();
-    await SongManager.songInit();
+    SongManager.songInit();
   }
 
   static Future<void> backgroundInit() async {
@@ -35,9 +37,6 @@ class Global {
     final androidConfig = FlutterBackgroundAndroidConfig(
       notificationTitle: "秋月音乐",
       notificationText: "秋月音乐常驻",
-      notificationImportance: AndroidNotificationImportance.normal,
-      notificationIcon:
-          AndroidResource(name: 'background_icon', defType: 'drawable'),
     );
     await FlutterBackground.initialize(androidConfig: androidConfig);
     await FlutterBackground.enableBackgroundExecution();
@@ -58,20 +57,11 @@ class Global {
     }
   }
 
-  static Future<void> cloudInit() async {
-    final r2 = R2Cloud();
-    await r2.init();
-    SongManager.tempList = await r2.getSongList();
-    await SongManager.getCloudSongs();
-  }
-
-  static AudioSession? session;
-
   static Future<void> audioActionInit() async {
     if (GetPlatform.isDesktop) return;
-    session = await AudioSession.instance;
-    await session?.configure(AudioSessionConfiguration.music());
-    session?.interruptionEventStream.listen((event) {
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration.music());
+    session.interruptionEventStream.listen((event) {
       if (event.begin) {
         switch (event.type) {
           case AudioInterruptionType.pause:
@@ -93,7 +83,7 @@ class Global {
         }
       }
     });
-    session?.becomingNoisyEventStream.listen((_) {
+    session.becomingNoisyEventStream.listen((_) {
       Global.log.d("拔掉耳机,暂停音乐");
       SongManager.player?.pause();
     });
@@ -103,22 +93,21 @@ class Global {
             androidNotificationChannelId: 'com.autumn.music.channel.audio',
             androidNotificationChannelName: '秋月音乐'));
   }
-
-  static MyAudioHandler? audioHandler;
 }
 
 class MyLogger {
   List<String> logList = [];
 
   static const key = '秋月';
+  Logger log = Logger();
 
   void d(String text) {
     logList.add(text);
-    debugPrint("$key $text");
+    log.d("$key $text");
   }
 
   void e(String text) {
     logList.add(text);
-    debugPrint("$key error $text");
+    log.e("$key error $text");
   }
 }

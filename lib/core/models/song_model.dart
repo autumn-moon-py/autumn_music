@@ -64,12 +64,14 @@ class SongModel extends HiveObject {
       await player?.setSource(DeviceFileSource(songPath)).catchError((e) {
         hasError = true;
         Global.log.e("$name 初始化本地音乐异常");
+        Global.t.e("$name 初始化失败");
         return e;
       });
     } else if (url.isNotEmpty) {
       await player?.setSource(UrlSource(url)).catchError((e) {
         hasError = true;
         Global.log.e("$name 初始化云音乐异常");
+        Global.t.e("$name 初始化失败");
         return e;
       });
     } else {
@@ -105,7 +107,7 @@ class SongModel extends HiveObject {
     });
   }
 
-  Future<void> playOrPause() async {
+  void playOrPause() {
     if (isDisposed || hasError || !isInitialized) {
       Global.log.e("$name 已被释放,异常,未初始化");
       isDisposed = false;
