@@ -7,6 +7,7 @@ import 'package:music/common/global.dart';
 import 'package:music/common/theme.dart';
 import 'package:music/core/manager/song_manager.dart';
 import 'package:music/core/service/r2.dart';
+import 'package:music/pages/log/page.dart';
 import 'package:music/utils/cache_tools.dart';
 import 'package:music/utils/noraml_tools.dart';
 import 'package:music/widgets/extension_widget.dart';
@@ -79,11 +80,11 @@ class _SettingPageState extends State<SettingPage> {
           cacheValue: songCache.value,
           cleaning: songCacheCleanging.value,
           onTap: () async {
-            SongManager.player?.dispose();
             songCacheCleanging(true);
             await CacheTool.deleteFiles(songCacheList);
             songCacheCleanging(false);
             songCache(0);
+            exit(0);
           });
       var cacheTile2 = _cacheTile(
           leadingIcon: Icons.image,
@@ -100,13 +101,23 @@ class _SettingPageState extends State<SettingPage> {
         cacheTile1,
         cacheTile2,
         _cloudSongsTile(),
-        _cloudSongsTile2()
+        _cloudSongsTile2(),
+        toLogPage()
       ])
           .color(Colors.white)
           .clipRRect(all: 10)
           .padding(horizontal: 10.w)
           .padding(top: 10.h);
     });
+  }
+
+  Widget toLogPage() {
+    return ListTile(
+        leading: AppTheme.nI(Icons.bug_report, Colors.black, 20),
+        title: AppTheme.bk("查看日志", 16),
+        onTap: () {
+          Get.to(LogViewerPage());
+        });
   }
 
   Widget _cacheTile(

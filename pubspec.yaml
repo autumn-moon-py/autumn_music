@@ -42,6 +42,8 @@ dependencies:
   ## 工具
   # s3
   minio: ^3.5.7
+  # 组件显示监听
+  visibility_detector: ^0.4.0+2
 
   ## UI
   # 模糊
@@ -52,6 +54,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   # 跳转列表索引
   indexed_list_view: ^4.0.0
+  # 小音频波浪
+  mini_music_visualizer: ^1.1.4
 
 dev_dependencies:
   flutter_test:

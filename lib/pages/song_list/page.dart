@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:indexed_list_view/indexed_list_view.dart';
 import 'package:keframe/keframe.dart';
 import 'package:music/common/theme.dart';
 import 'package:music/core/models/song_model.dart';
@@ -9,7 +10,8 @@ import 'widget.dart';
 
 class SongListPage extends StatelessWidget {
   final List<SongModel> list;
-  const SongListPage({super.key, required this.list});
+  final IndexedScrollController controller;
+  const SongListPage({super.key, required this.list, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +19,11 @@ class SongListPage extends StatelessWidget {
       list.isEmpty
           ? AppTheme.bk("暂无歌曲", 20).center()
           : SizeCacheWidget(
-              child: ListView.builder(
-                  padding: EdgeInsets.only(top: 10.h, bottom: 200.h),
-                  itemCount: list.length,
+              child: IndexedListView.builder(
+                  minItemCount: 0,
+                  maxItemCount: list.length - 1,
+                  controller: controller,
+                  padding: EdgeInsets.only(top: 0, bottom: 20.h),
                   itemBuilder: (c, index) {
                     return FrameSeparateWidget(
                       index: index,

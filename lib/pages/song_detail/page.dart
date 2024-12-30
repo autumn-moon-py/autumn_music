@@ -28,8 +28,9 @@ class _SongDetilsPageState extends State<SongDetilsPage> {
       Spacer(),
       IconButton(
           onPressed: () async {
-            Get.bottomSheet(
-                sb().color(Colors.white).clipRRect(topLeft: 10, topRight: 10));
+            Get.bottomSheet(moreActionMenu(model)
+                .color(Colors.white)
+                .clipRRect(topLeft: 10, topRight: 10));
           },
           icon: AppTheme.nI(Icons.more_horiz, Colors.white, 25)),
     ]).padding(horizontal: 10.w);

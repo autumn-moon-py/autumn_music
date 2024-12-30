@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:indexed_list_view/indexed_list_view.dart';
 import 'package:music/common/theme.dart';
 import 'package:music/core/manager/song_manager.dart';
 import 'package:music/pages/setting/page.dart';
@@ -24,6 +25,8 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   bool get wantKeepAlive => true;
 
+  final controller = IndexedScrollController();
+
   Widget bottom() {
     return Obx(() {
       final model = SongManager.nowSongModel.value;
@@ -43,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage>
           onPressed: () {
             model.playOrPause();
           },
-          icon: Stack(children: [
+          icon: Stack(alignment: Alignment.center, children: [
             AppTheme.nI(
                 model.isPlaying.value
                     ? Icons.pause_rounded
@@ -132,6 +135,7 @@ class _MyHomePageState extends State<MyHomePage>
                   leading: BackButton(color: Colors.white),
                 ),
                 body: SongListPage(
+                    controller: controller,
                     list: SongManager.getPendingProcessingSongs())));
           })
     ]));
@@ -142,10 +146,22 @@ class _MyHomePageState extends State<MyHomePage>
       Container(color: Colors.white),
       Obx(() {
         final list = SongManager.playlist.value;
-        return SongListPage(list: list);
+        return SongListPage(list: list, controller: controller);
       }),
       bottom().alignment(Alignment.bottomCenter),
     ]);
+  }
+
+  Widget buildFloatB() {
+    return Obx(() {
+      final show = !SongManager.nowSongModel.value.isShow.value;
+      return FloatingActionButton(
+        onPressed: () {
+          controller.jumpToIndex(SongManager.currentIndex.value);
+        },
+        child: AppTheme.nI(Icons.search, Colors.black, 25),
+      ).padding(bottom: 50.h).hide(show: show);
+    });
   }
 
   @override
@@ -155,6 +171,7 @@ class _MyHomePageState extends State<MyHomePage>
       appBar: buildAppbar(),
       drawer: buildDrawer(),
       body: buildBody(),
+      floatingActionButton: buildFloatB(),
     );
   }
 }

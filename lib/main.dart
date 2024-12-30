@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:music/pages/home/page.dart';
 
 import 'common/global.dart';
+import 'utils/error_catch.dart';
 
 Future<void> main() async {
-  await Global.init();
-  runApp(const MyApp());
+  GlobalErrorHandler.init(() async {
+    await Global.init();
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -22,6 +26,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(useMaterial3: true),
           home: const MyHomePage(),
+          builder: EasyLoading.init(),
         ));
   }
 }

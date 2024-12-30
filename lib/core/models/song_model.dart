@@ -40,8 +40,8 @@ class SongModel extends HiveObject {
   bool isDisposed = false;
   bool hasError = false;
   bool isInitialized = false;
-
   bool pendingProcessing = false;
+  var isShow = false.obs;
 
   Future<void> init() async {
     if (isDisposed) {

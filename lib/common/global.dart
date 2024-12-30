@@ -65,19 +65,22 @@ class Global {
       if (event.begin) {
         switch (event.type) {
           case AudioInterruptionType.pause:
-            SongManager.player?.resume();
+            SongManager.pause();
             break;
           case AudioInterruptionType.duck:
+            SongManager.resume();
+            break;
           case AudioInterruptionType.unknown:
             break;
         }
       } else {
         switch (event.type) {
-          case AudioInterruptionType.duck:
-            SongManager.player?.pause();
-            break;
           case AudioInterruptionType.pause:
-            SongManager.player?.resume();
+            SongManager.pause();
+            break;
+          case AudioInterruptionType.duck:
+            SongManager.resume();
+            break;
           case AudioInterruptionType.unknown:
             break;
         }
@@ -107,7 +110,7 @@ class MyLogger {
   }
 
   void e(String text) {
-    logList.add(text);
+    logList.add("error: $text");
     log.e("$key error $text");
   }
 }

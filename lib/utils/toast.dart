@@ -17,6 +17,7 @@ class Toast {
       String content = '内容',
       String rthBText = "确定",
       String lthBText = '取消'}) {
+    if (Get.isDialogOpen ?? false) return;
     Get.dialog(CupertinoAlertDialog(
         title: Text(title),
         content: Text(content),

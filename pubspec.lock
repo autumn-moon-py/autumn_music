@@ -497,10 +497,10 @@ packages:
     dependency: transitive
     description:
       name: intl
-      sha256: "00f33b908655e606b86d2ade4710a231b802eec6f11e87e4ea3783fd72077a50"
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.20.1"
+    version: "0.19.0"
   io:
     dependency: transitive
     description:
@@ -621,6 +621,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
+  mini_music_visualizer:
+    dependency: "direct main"
+    description:
+      name: mini_music_visualizer
+      sha256: "779a957424ce9a09cc00989a8cf9b7541ec22316d9781a43e701afa6acacf274"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.4"
   minio:
     dependency: "direct main"
     description:
@@ -970,6 +978,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.4"
+  visibility_detector:
+    dependency: "direct main"
+    description:
+      name: visibility_detector
+      sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.4.0+2"
   vm_service:
     dependency: transitive
     description:

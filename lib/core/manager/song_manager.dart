@@ -24,6 +24,7 @@ class SongManager {
   static final nowSongModel = SongModel().obs;
   static List<SongModel> tempList = [];
   static int nextShuffleIndex = -1;
+  static bool autoPause = false;
 
   static AudioPlayer? get player => nowSongModel.value.player;
 
@@ -39,11 +40,31 @@ class SongManager {
       Global.log.d("没有歌曲");
       return;
     }
-    nowSongModel.value = playlist.first;
+    currentIndex.value = rdn;
+    nowSongModel.value = playlist[currentIndex.value];
     if (playMode.value == PlayMode.shuffle) {
-      nextShuffleIndex = Random().nextInt(playlist.length);
+      nextShuffleIndex = rdn;
     }
     updatePlayingWindow();
+  }
+
+  static void pause() {
+    final model = nowSongModel.value;
+    if (model.isPlaying.value) {
+      autoPause = true;
+      model.player?.pause();
+      Global.audioHandler?.setPause();
+    }
+  }
+
+  static void resume() {
+    if (!autoPause) return;
+    final model = nowSongModel.value;
+    if (!model.isPlaying.value) {
+      autoPause = false;
+      model.player?.resume();
+      Global.audioHandler?.setPlay();
+    }
   }
 
   static Future<void> getCloudSongs() async {
@@ -107,7 +128,7 @@ class SongManager {
       currentIndex.value = nextShuffleIndex;
       nowSongModel.value = playlist[currentIndex.value];
       if (playMode.value == PlayMode.shuffle) {
-        nextShuffleIndex = Random().nextInt(playlist.length);
+        nextShuffleIndex = rdn;
       }
     } else {
       updateSongAndWindow(true);
@@ -117,12 +138,12 @@ class SongManager {
 
   static void updateSongAndWindow(bool isNext) {
     if (playMode.value == PlayMode.shuffle && nextShuffleIndex == -1) {
-      nextShuffleIndex = Random().nextInt(playlist.length);
+      nextShuffleIndex = rdn;
     }
     switch (playMode.value) {
       case PlayMode.shuffle:
         currentIndex.value = nextShuffleIndex;
-        nextShuffleIndex = Random().nextInt(playlist.length);
+        nextShuffleIndex = rdn;
         break;
       case PlayMode.loop:
         currentIndex.value =
@@ -177,7 +198,7 @@ class SongManager {
     }
 
     if (playMode.value == PlayMode.shuffle) {
-      nextShuffleIndex = Random().nextInt(playlist.length);
+      nextShuffleIndex = rdn;
     } else {
       nextShuffleIndex = -1;
     }
@@ -208,4 +229,6 @@ class SongManager {
   static List<SongModel> getPendingProcessingSongs() {
     return playlist.where((element) => element.pendingProcessing).toList();
   }
+
+  static int get rdn => Random().nextInt(playlist.length - 1);
 }

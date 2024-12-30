@@ -11,6 +11,15 @@ class AppTheme {
             fontWeight: bold ? FontWeight.bold : FontWeight.normal));
   }
 
+  static Widget nT2(String text, Color color, double size,
+      [bool bold = false]) {
+    return Text(text,
+        style: TextStyle(
+            color: color,
+            fontSize: size.sp,
+            fontWeight: bold ? FontWeight.bold : FontWeight.normal));
+  }
+
   static Widget nI(IconData icon, Color color, double size) {
     return Icon(icon, color: color, size: size.sp);
   }
