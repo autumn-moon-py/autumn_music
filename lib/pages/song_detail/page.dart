@@ -106,9 +106,9 @@ class _SongDetilsPageState extends State<SongDetilsPage> {
       return Scaffold(
           body: Stack(children: [
         songPage(model),
-        top(model),
+        top(model).padding(top: ScreenUtil().statusBarHeight),
         bottom(model),
-      ])).safeArea();
+      ]));
     });
   }
 }

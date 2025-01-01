@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:music/common/global.dart';
 import 'package:music/core/manager/song_manager.dart';
+import 'package:music/utils/error_catch.dart';
 import 'package:music/utils/music_tools.dart';
 
 part 'song_model.g.dart';
@@ -61,14 +62,17 @@ class SongModel extends HiveObject {
     audioListen();
     isLoading(true);
     if (songPath.isNotEmpty) {
-      await player?.setSource(DeviceFileSource(songPath)).catchError((e) {
+      await player
+          ?.setSource(DeviceFileSource(songPath))
+          .withTimeout()
+          .catchError((e) {
         hasError = true;
         Global.log.e("$name 初始化本地音乐异常");
         Global.t.e("$name 初始化失败");
         return e;
       });
     } else if (url.isNotEmpty) {
-      await player?.setSource(UrlSource(url)).catchError((e) {
+      await player?.setSource(UrlSource(url)).withTimeout().catchError((e) {
         hasError = true;
         Global.log.e("$name 初始化云音乐异常");
         Global.t.e("$name 初始化失败");
@@ -80,6 +84,7 @@ class SongModel extends HiveObject {
     isLoading(false);
     isInitialized = true;
     Global.log.d("$name 初始化完成");
+    cacheCover();
   }
 
   void audioListen() {

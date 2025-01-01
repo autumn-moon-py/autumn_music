@@ -35,7 +35,8 @@ Widget songCard(SongModel model) {
       ]),
       Spacer(),
       Obx(() {
-        final isPlay = SongManager.nowSongModel.value == model;
+        final cModel = SongManager.nowSongModel.value;
+        final isPlay = cModel == model && model.isPlaying.value;
         return isPlay
             ? MiniMusicVisualizer(
                 animate: true,

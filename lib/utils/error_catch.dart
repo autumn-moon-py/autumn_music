@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:music/common/global.dart';
 
 class GlobalErrorHandler {
@@ -26,8 +25,18 @@ class GlobalErrorHandler {
 
   static void _reportError(Object error, StackTrace? stack) {
     Global.log.e("details:$error stack:$stack");
-    Global.t.myDialog(() {
-      Get.back();
-    }, content: error.toString(), title: "异常");
+    Global.t.e(error.toString());
+  }
+}
+
+extension FutureTimeoutExtension<T> on Future<T> {
+  static Duration? timeout;
+
+  Future<T> withTimeout([Duration? timeLimit]) {
+    return this.timeout(
+      timeLimit ?? timeout ?? const Duration(seconds: 30),
+      onTimeout: () => throw TimeoutException(
+          'Future operation timed out after ${timeLimit?.inSeconds ?? timeout?.inSeconds ?? 30} seconds'),
+    );
   }
 }

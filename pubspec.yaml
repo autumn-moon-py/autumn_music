@@ -1,7 +1,7 @@
 name: music
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0+1
+version: 1.0.1+1
 environment:
   sdk: ">=3.6.0 <4.0.0"
 
@@ -32,8 +32,6 @@ dependencies:
   ## 音频相关
   # 音频播放
   audioplayers: ^6.1.0
-  # 音频系统行为处理
-  audio_session: ^0.1.23
   # 系统音频操作代理
   audio_service: ^0.18.16
   # 读取音频元数据
@@ -44,6 +42,10 @@ dependencies:
   minio: ^3.5.7
   # 组件显示监听
   visibility_detector: ^0.4.0+2
+  # 键盘焦点取消
+  keyboard_dismisser: ^3.0.0
+  # 包信息
+  package_info_plus: ^8.1.2
 
   ## UI
   # 模糊

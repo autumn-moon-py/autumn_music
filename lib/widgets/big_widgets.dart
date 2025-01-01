@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:music/common/theme.dart';
 import 'package:music/widgets/extension_widget.dart';
 import 'package:music/widgets/small_widgets.dart';
@@ -91,12 +92,6 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
   final TextEditingController _searchController = TextEditingController();
   final RxList<T> _searchResults = <T>[].obs;
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
   void _updateSearchResults(String query) {
     if (query.isEmpty) {
       _searchResults.clear();
@@ -120,7 +115,12 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
             centerTitle: true,
             backgroundColor: AppTheme.darkBlue,
             actions: [w(5.w), iconButton, w(10.w)],
-            leading: BackButton(color: Colors.white)),
+            leading: BackButton(
+                color: Colors.white,
+                onPressed: () {
+                  _searchController.clear();
+                  FocusManager.instance.primaryFocus?.unfocus();
+                })),
         body: SearchPage(
           searchResults: _searchResults,
           itemBuilder: widget.itemBuilder,
@@ -128,24 +128,26 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
   }
 
   Widget _buildSearchBar() {
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: TextField(
-            controller: _searchController,
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              hintText: "搜索",
-              border: InputBorder.none,
-            ),
-            onChanged: _updateSearchResults,
-            onTap: () {
-              if (Get.currentRoute == "/") {
-                Get.to(() => searchP());
-              }
-            }));
+    return KeyboardDismisser(
+      child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: TextField(
+              controller: _searchController,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: "搜索",
+                border: InputBorder.none,
+              ),
+              onChanged: _updateSearchResults,
+              onTap: () {
+                if (Get.currentRoute == "/") {
+                  Get.to(() => searchP());
+                }
+              })),
+    );
   }
 
   @override

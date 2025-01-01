@@ -1,5 +1,4 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:get/get.dart';
@@ -9,6 +8,7 @@ import 'package:music/core/manager/song_manager.dart';
 import 'package:music/core/models/song_model.dart';
 import 'package:music/utils/music_tools.dart';
 import 'package:music/utils/toast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
 class Global {
@@ -20,8 +20,11 @@ class Global {
 
   static MyAudioHandler? audioHandler;
 
+  static String version = "";
+
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await getVersion();
     await windowsInit();
     await Hive.initFlutter();
     Hive.registerAdapter(SongModelAdapter());
@@ -32,6 +35,13 @@ class Global {
     SongManager.songInit();
   }
 
+  static Future<void> getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String v = packageInfo.version;
+    String n = packageInfo.buildNumber;
+    version = v + n;
+  }
+
   static Future<void> backgroundInit() async {
     if (!GetPlatform.isAndroid) return;
     final androidConfig = FlutterBackgroundAndroidConfig(
@@ -39,7 +49,6 @@ class Global {
       notificationText: "秋月音乐常驻",
     );
     await FlutterBackground.initialize(androidConfig: androidConfig);
-    await FlutterBackground.enableBackgroundExecution();
   }
 
   static Future<void> windowsInit() async {
@@ -59,37 +68,6 @@ class Global {
 
   static Future<void> audioActionInit() async {
     if (GetPlatform.isDesktop) return;
-    final session = await AudioSession.instance;
-    await session.configure(AudioSessionConfiguration.music());
-    session.interruptionEventStream.listen((event) {
-      if (event.begin) {
-        switch (event.type) {
-          case AudioInterruptionType.pause:
-            SongManager.pause();
-            break;
-          case AudioInterruptionType.duck:
-            SongManager.resume();
-            break;
-          case AudioInterruptionType.unknown:
-            break;
-        }
-      } else {
-        switch (event.type) {
-          case AudioInterruptionType.pause:
-            SongManager.pause();
-            break;
-          case AudioInterruptionType.duck:
-            SongManager.resume();
-            break;
-          case AudioInterruptionType.unknown:
-            break;
-        }
-      }
-    });
-    session.becomingNoisyEventStream.listen((_) {
-      Global.log.d("拔掉耳机,暂停音乐");
-      SongManager.player?.pause();
-    });
     audioHandler = await AudioService.init(
         builder: () => MyAudioHandler(),
         config: AudioServiceConfig(

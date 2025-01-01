@@ -49,10 +49,7 @@ class _SettingPageState extends State<SettingPage> {
       appBar: _buildAppBar(),
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(onPressed: () async {
-        final r2 = R2Cloud();
-        await r2.init();
-        SongManager.tempList = await r2.getNewSongList();
-        await SongManager.getCloudSongs();
+        //
       }),
     );
   }
@@ -102,7 +99,9 @@ class _SettingPageState extends State<SettingPage> {
         cacheTile2,
         _cloudSongsTile(),
         _cloudSongsTile2(),
-        toLogPage()
+        _cloudSongsTile3(),
+        toLogPage(),
+        _buildVersionTile()
       ])
           .color(Colors.white)
           .clipRRect(all: 10)
@@ -118,6 +117,13 @@ class _SettingPageState extends State<SettingPage> {
         onTap: () {
           Get.to(LogViewerPage());
         });
+  }
+
+  Widget _buildVersionTile() {
+    return ListTile(
+        leading: AppTheme.nI(Icons.info, Colors.black, 20),
+        title: AppTheme.bk("版本号", 16),
+        trailing: AppTheme.bk(Global.version, 16));
   }
 
   Widget _cacheTile(
@@ -157,7 +163,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _cloudSongsTile2() {
     return ListTile(
-      leading: AppTheme.nI(Icons.cloud, Colors.black, 20),
+      leading: AppTheme.nI(Icons.upgrade, Colors.black, 20),
       title: AppTheme.bk("获取更新歌曲", 16),
       trailing: AppTheme.bk(SongManager.tempList.length.toString(), 16),
       onTap: () async {
@@ -168,6 +174,21 @@ class _SettingPageState extends State<SettingPage> {
         setState(() {});
         await SongManager.getCloudSongs();
         setState(() {});
+        Global.t.cancel();
+      },
+    );
+  }
+
+  Widget _cloudSongsTile3() {
+    return ListTile(
+      leading: AppTheme.nI(Icons.image, Colors.black, 20),
+      title: AppTheme.bk("获取全部歌曲封面", 16),
+      onTap: () async {
+        Global.t.p();
+        final list = SongManager.playlist;
+        for (var model in list) {
+          await model.cacheCover();
+        }
         Global.t.cancel();
       },
     );
