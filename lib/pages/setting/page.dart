@@ -46,12 +46,12 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-        //
-      }),
-    );
+        appBar: _buildAppBar(),
+        body: _buildBody(),
+        floatingActionButton: FloatingActionButton(onPressed: () async {
+          //
+        })
+            .hide());
   }
 
   AppBar _buildAppBar() {
@@ -167,14 +167,12 @@ class _SettingPageState extends State<SettingPage> {
       title: AppTheme.bk("获取更新歌曲", 16),
       trailing: AppTheme.bk(SongManager.tempList.length.toString(), 16),
       onTap: () async {
-        Global.t.p();
         final r2 = R2Cloud();
         await r2.init();
         SongManager.tempList = await r2.getNewSongList();
         setState(() {});
         await SongManager.getCloudSongs();
         setState(() {});
-        Global.t.cancel();
       },
     );
   }
@@ -187,7 +185,7 @@ class _SettingPageState extends State<SettingPage> {
         Global.t.p();
         final list = SongManager.playlist;
         for (var model in list) {
-          await model.cacheCover();
+          await model.refreshCover();
         }
         Global.t.cancel();
       },

@@ -76,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage>
           .color(Colors.white)
           .border(bottom: 1, color: Colors.grey.shade300)
           .gestures(onTap: () {
+        if (model.name.isEmpty) return;
         Get.to(() => SongDetilsPage(), transition: Transition.downToUp);
       });
     });
@@ -142,32 +143,33 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   Widget buildBody() {
-    return Stack(children: [
-      Container(color: Colors.white),
+    return Column(children: [
       Obx(() {
         final list = SongManager.playlist.value;
         return SongListPage(list: list, controller: controller);
-      }),
-      bottom().alignment(Alignment.bottomCenter),
-    ]);
+      }).expanded(),
+      bottom()
+    ]).height(1.sh);
   }
 
   Widget buildFloatB() {
     return Obx(() {
-      final show = !SongManager.nowSongModel.value.isShow.value;
+      final show = !SongManager.nowSongModel.value.isShow.value &&
+          SongManager.playlist.isNotEmpty;
       return FloatingActionButton(
         onPressed: () {
           controller.jumpToIndex(SongManager.currentIndex.value);
         },
         child: AppTheme.nI(Icons.search, Colors.black, 25),
       ).padding(bottom: 50.h).hide(show: show);
-    });
+    }).hide();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: buildAppbar(),
       drawer: buildDrawer(),
       body: buildBody(),

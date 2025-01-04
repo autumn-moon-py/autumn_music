@@ -89,6 +89,7 @@ class SongManager {
       if (!songBox.values.toList().contains(model)) {
         songBox.add(model);
       }
+      Global.log.d("${model.name} 转换完成");
     }
     Global.log.d("云歌曲模型转换完成");
     tempList.clear();
@@ -117,12 +118,14 @@ class SongManager {
   }
 
   static void previous() {
+    if (playlist.isEmpty) return;
     player?.pause();
     updateSongAndWindow(false);
     updatePlayingWindow();
   }
 
   static void next() {
+    if (playlist.isEmpty) return;
     player?.pause();
     if (playMode.value == PlayMode.shuffle && nextShuffleIndex != -1) {
       currentIndex.value = nextShuffleIndex;
@@ -208,6 +211,7 @@ class SongManager {
   }
 
   static void clear() {
+    player?.dispose();
     tempList.clear();
     currentIndex(0);
     nowSongModel(SongModel());
@@ -230,5 +234,6 @@ class SongManager {
     return playlist.where((element) => element.pendingProcessing).toList();
   }
 
-  static int get rdn => Random().nextInt(playlist.length - 1);
+  static int get rdn =>
+      playlist.length <= 1 ? 0 : Random().nextInt(playlist.length - 1);
 }

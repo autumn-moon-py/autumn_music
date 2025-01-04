@@ -38,8 +38,7 @@ class Global {
   static Future<void> getVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String v = packageInfo.version;
-    String n = packageInfo.buildNumber;
-    version = v + n;
+    version = v;
   }
 
   static Future<void> backgroundInit() async {

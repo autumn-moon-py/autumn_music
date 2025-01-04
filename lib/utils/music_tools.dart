@@ -78,18 +78,21 @@ Future<String> cloudMusicToPath(String url, String fileName) async {
   late String filePath;
   fileName = fileName.replaceAll(RegExp(r'[\\/:*?"<>|]'), '');
   if (Platform.isAndroid) {
-    filePath = '${downloadDir.path}/$fileName';
+    filePath = '${downloadDir.path}/$fileName.mp3';
   } else {
-    filePath = '${downloadDir.path}\\$fileName';
+    filePath = '${downloadDir.path}\\$fileName.mp3';
   }
   if (File(filePath).existsSync()) return filePath;
 
   try {
-    final response = await dio.download(url, filePath);
+    final response =
+        await dio.download(url, filePath).timeout(Duration(seconds: 30));
     if (response.statusCode == 200) {
       return filePath;
     }
-  } catch (_) {}
+  } catch (_) {
+    return "";
+  }
   return "";
 }
 

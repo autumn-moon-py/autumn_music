@@ -15,22 +15,21 @@ class SongListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      list.isEmpty
-          ? AppTheme.bk("暂无歌曲", 20).center()
-          : SizeCacheWidget(
-              child: IndexedListView.builder(
-                  minItemCount: 0,
-                  maxItemCount: list.length - 1,
-                  controller: controller,
-                  padding: EdgeInsets.only(top: 0, bottom: 20.h),
-                  itemBuilder: (c, index) {
-                    return FrameSeparateWidget(
-                      index: index,
-                      child:
-                          songCard(list[index]).padding(left: 15.w, right: 5.w),
-                    );
-                  }).height(1.sh))
-    ]);
+    return list.isEmpty
+        ? AppTheme.bk("暂无歌曲", 20).center().width(1.sw).height(1.sh)
+        : SizeCacheWidget(
+            child: ListView.builder(
+                // minItemCount: 0,
+                // maxItemCount: list.length - 1,
+                // controller: controller,
+                itemCount: list.length,
+                padding: EdgeInsets.symmetric(vertical: 5.h),
+                itemBuilder: (c, index) {
+                  return FrameSeparateWidget(
+                    index: index,
+                    child:
+                        songCard(list[index]).padding(left: 15.w, right: 5.w),
+                  );
+                }));
   }
 }

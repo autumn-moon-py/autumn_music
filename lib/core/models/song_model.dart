@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:music/common/global.dart';
@@ -29,8 +28,6 @@ class SongModel extends HiveObject {
   String url = "";
 
   List<int> coverData = [];
-  Uint8List coverU8 = Uint8List(0);
-
   AudioPlayer? player;
 
   var duration = Duration.zero.obs;
@@ -68,14 +65,12 @@ class SongModel extends HiveObject {
           .catchError((e) {
         hasError = true;
         Global.log.e("$name 初始化本地音乐异常");
-        Global.t.e("$name 初始化失败");
         return e;
       });
     } else if (url.isNotEmpty) {
       await player?.setSource(UrlSource(url)).withTimeout().catchError((e) {
         hasError = true;
         Global.log.e("$name 初始化云音乐异常");
-        Global.t.e("$name 初始化失败");
         return e;
       });
     } else {
@@ -113,6 +108,7 @@ class SongModel extends HiveObject {
   }
 
   void playOrPause() {
+    if (url.isEmpty && songPath.isEmpty) return;
     if (isDisposed || hasError || !isInitialized) {
       Global.log.e("$name 已被释放,异常,未初始化");
       isDisposed = false;
@@ -144,7 +140,7 @@ class SongModel extends HiveObject {
     coverData = tag.pictures.isEmpty ? [] : tag.pictures.first.imageData;
     await cacheCover();
     save();
-    Global.log.d("刷新封面");
+    Global.log.d("$name 刷新封面");
   }
 
   Future<void> cacheCover() async {
@@ -155,22 +151,13 @@ class SongModel extends HiveObject {
     }
   }
 
-  void formatCoverDate() {
-    if (coverData.isEmpty) return;
-    coverU8 = Uint8List.fromList(coverData);
-    coverData = [];
-    Global.log.d("格式化封面数据成功");
-  }
-
   void mark() {
     if (pendingProcessing) {
-      Global.t.t("标记过");
       return;
     }
     pendingProcessing = true;
     save();
     Global.log.d("$name 已标记待处理");
-    Global.t.t("已标记");
   }
 
   void disposePlayer() {

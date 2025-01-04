@@ -16,6 +16,7 @@ class R2Cloud {
         endPoint: AppConfig.endPoint,
         accessKey: AppConfig.accessKey,
         secretKey: AppConfig.secretKey);
+    Global.log.d("s3初始化");
   }
 
   String replaceDomain(String url, String newDomain) {
@@ -29,6 +30,7 @@ class R2Cloud {
   }
 
   Future<List<SongModel>> getSongList() async {
+    Global.log.d("s3获取文件列表");
     try {
       final objects = await minio.listAllObjects(bucket, prefix: prefix);
       List<SongModel> songList = [];
@@ -41,7 +43,6 @@ class R2Cloud {
           ..name = name.replaceFirst(".mp3", "").replaceFirst(prefix, "")
           ..url = songUrl;
         songList.add(model);
-        Global.log.d("${model.name} 添加成功");
       }
       Global.log.d("获取云歌曲数量:${songList.length}");
       return songList;
@@ -68,7 +69,6 @@ class R2Cloud {
         ..url = songUrl
         ..name = name.replaceFirst(".mp3", "").replaceFirst(prefix, "");
       songList.add(model);
-      Global.log.d("${model.name} 添加成功");
     }
     Global.log.d("获取更新歌曲数量:${songList.length}");
     return songList;

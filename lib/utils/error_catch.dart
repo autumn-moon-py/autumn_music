@@ -25,7 +25,6 @@ class GlobalErrorHandler {
 
   static void _reportError(Object error, StackTrace? stack) {
     Global.log.e("details:$error stack:$stack");
-    Global.t.e(error.toString());
   }
 }
 

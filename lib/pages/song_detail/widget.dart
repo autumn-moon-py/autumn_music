@@ -79,14 +79,11 @@ Widget getCoverImage(SongModel model, {bool bg = false, bool bigIcon = false}) {
         : AppTheme.nI(Icons.music_note, AppTheme.darkBlue, bigIcon ? 100 : 25)
             .center()
   ]);
-  final memImage = Image.memory(model.coverU8,
-      fit: BoxFit.cover, errorBuilder: (c, e, s) => noImage);
+
   if (model.coverPath.isNotEmpty) {
     return Image.file(coverFile, fit: BoxFit.cover, errorBuilder: (c, e, s) {
-      return memImage;
+      return noImage;
     });
-  } else if (model.coverU8.isNotEmpty) {
-    return memImage;
   }
   return noImage;
 }

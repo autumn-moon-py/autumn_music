@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,11 @@ import 'common/global.dart';
 import 'utils/error_catch.dart';
 
 Future<void> main() async {
+  if (kDebugMode) {
+    await Global.init();
+    runApp(MyApp());
+    return;
+  }
   GlobalErrorHandler.init(() async {
     await Global.init();
     runApp(MyApp());

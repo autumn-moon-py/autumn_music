@@ -84,7 +84,7 @@ class _SongDetilsPageState extends State<SongDetilsPage> {
           h(10),
           AppTheme.w(model.artist, 18).padding(horizontal: 10.w),
         ]).width(1.sw),
-      ),
+      ).padding(top: ScreenUtil().statusBarHeight),
     ]);
   }
 
