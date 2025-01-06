@@ -1,1 +1,1 @@
-cmd /k "flutter build apk --no-tree-shake-icons"
+cmd /k "fvm flutter build apk --no-tree-shake-icons"
