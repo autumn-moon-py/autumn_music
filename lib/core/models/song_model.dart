@@ -158,6 +158,7 @@ class SongModel extends HiveObject {
     pendingProcessing = true;
     save();
     Global.log.d("$name 已标记待处理");
+    Global.t.t("已标记");
   }
 
   void disposePlayer() {
@@ -168,6 +169,13 @@ class SongModel extends HiveObject {
       isInitialized = false;
       Global.log.d("$name 已释放");
     }
+  }
+
+  void deleteSong() {
+    disposePlayer();
+    File(songPath).delete();
+    delete();
+    Global.t.t("已删除");
   }
 
   @override

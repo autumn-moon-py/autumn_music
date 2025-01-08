@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:id3tag/id3tag.dart';
 import 'package:music/common/config.dart';
@@ -12,32 +11,6 @@ Future<ID3Tag> readMusicData(String path) async {
   final parser = ID3TagReader.path(path);
   final ID3Tag tag = parser.readTagSync();
   return tag;
-}
-
-Future<String> assetsMusicToPath(String assetsPath, String fileName) async {
-  final ByteData fileData = await rootBundle.load(assetsPath);
-  final dir = (await AppConfig.getAppCacheDir()).path;
-  late Directory musciDir;
-  if (GetPlatform.isAndroid) {
-    musciDir = Directory("$dir/music");
-  } else {
-    musciDir = Directory("$dir\\music");
-  }
-  if (!musciDir.existsSync()) {
-    musciDir.createSync();
-  }
-  late String filePath;
-  fileName = fileName.replaceAll(RegExp(r'[\\/:*?"<>|]'), '');
-  if (GetPlatform.isAndroid) {
-    filePath = '${musciDir.path}/$fileName.mp3';
-  } else {
-    filePath = '${musciDir.path}\\$fileName.mp3';
-  }
-  if (File(filePath).existsSync()) return filePath;
-  final u8 = fileData.buffer
-      .asUint8List(fileData.offsetInBytes, fileData.lengthInBytes);
-  final musicFile = File(filePath)..writeAsBytesSync(u8);
-  return musicFile.path;
 }
 
 Future<String> memoryImageToPath(List<int> bytes, String fileName) async {

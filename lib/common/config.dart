@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 
 class AppConfig {
   static Future<Directory> getAppCacheDir() async {
-    return await getTemporaryDirectory();
+    return await getApplicationDocumentsDirectory();
   }
 
   static String endPoint =

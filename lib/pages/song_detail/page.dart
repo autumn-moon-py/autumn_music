@@ -10,8 +10,22 @@ import 'package:music/widgets/big_widgets.dart';
 import 'package:music/widgets/extension_widget.dart';
 import 'package:music/widgets/small_widgets.dart';
 
+class RxSongDetilsPage extends StatelessWidget {
+  const RxSongDetilsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final model = SongManager.nowSongModel.value;
+
+      return SongDetilsPage(model: model);
+    });
+  }
+}
+
 class SongDetilsPage extends StatefulWidget {
-  const SongDetilsPage({super.key});
+  final SongModel model;
+  const SongDetilsPage({super.key, required this.model});
 
   @override
   State<SongDetilsPage> createState() => _SongDetilsPageState();
@@ -50,6 +64,13 @@ class _SongDetilsPageState extends State<SongDetilsPage> {
             Get.back();
             await model.refreshCover();
             setState(() {});
+          }),
+      ListTile(
+          title: AppTheme.bk("删除单曲", 20),
+          onTap: () async {
+            Get.back();
+            SongManager.next();
+            model.deleteSong();
           }),
     ]).padding(vertical: 30.h);
   }
@@ -100,15 +121,13 @@ class _SongDetilsPageState extends State<SongDetilsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final model = SongManager.nowSongModel.value;
+    final model = widget.model;
 
-      return Scaffold(
-          body: Stack(children: [
-        songPage(model),
-        top(model).padding(top: ScreenUtil().statusBarHeight),
-        bottom(model),
-      ]));
-    });
+    return Scaffold(
+        body: Stack(children: [
+      songPage(model),
+      top(model).padding(top: ScreenUtil().statusBarHeight),
+      bottom(model),
+    ]));
   }
 }

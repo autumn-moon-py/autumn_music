@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage>
           .border(bottom: 1, color: Colors.grey.shade300)
           .gestures(onTap: () {
         if (model.name.isEmpty) return;
-        Get.to(() => SongDetilsPage(), transition: Transition.downToUp);
+        Get.to(() => RxSongDetilsPage(), transition: Transition.downToUp);
       });
     });
   }

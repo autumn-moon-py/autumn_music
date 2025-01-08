@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:get/get.dart';
+import 'package:headset_connection_event/headset_event.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:music/core/manager/song_manager.dart';
@@ -72,6 +73,15 @@ class Global {
         config: AudioServiceConfig(
             androidNotificationChannelId: 'com.autumn.music.channel.audio',
             androidNotificationChannelName: '秋月音乐'));
+    final headsetPlugin = HeadsetEvent();
+    await headsetPlugin.requestPermission();
+    headsetPlugin.setListener((state) {
+      if (state == HeadsetState.CONNECT) {
+        SongManager.resume();
+      } else if (state == HeadsetState.DISCONNECT) {
+        SongManager.pause();
+      }
+    });
   }
 }
 

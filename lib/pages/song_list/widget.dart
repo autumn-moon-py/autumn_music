@@ -5,6 +5,7 @@ import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 import 'package:music/common/theme.dart';
 import 'package:music/core/manager/song_manager.dart';
 import 'package:music/core/models/song_model.dart';
+import 'package:music/pages/song_detail/page.dart';
 import 'package:music/pages/song_detail/widget.dart';
 import 'package:music/widgets/extension_widget.dart';
 import 'package:music/widgets/small_widgets.dart';
@@ -49,6 +50,8 @@ Widget songCard(SongModel model) {
                 icon: AppTheme.nI(Icons.more_vert, Colors.grey, 25));
       })
     ]).color(Colors.transparent).gestures(onTap: () {
+      Get.to(SongDetilsPage(model: model));
+    }, onDoubleTap: () {
       SongManager.changeSong(model);
     }).padding(bottom: 10.h),
   );

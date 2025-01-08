@@ -50,6 +50,7 @@ class SongManager {
 
   static void pause() {
     final model = nowSongModel.value;
+    if (model.songPath.isEmpty) return;
     if (model.isPlaying.value) {
       autoPause = true;
       model.player?.pause();
@@ -60,6 +61,7 @@ class SongManager {
   static void resume() {
     if (!autoPause) return;
     final model = nowSongModel.value;
+    if (model.songPath.isEmpty) return;
     if (!model.isPlaying.value) {
       autoPause = false;
       model.player?.resume();
@@ -100,6 +102,10 @@ class SongManager {
     currentIndex.value = playlist.indexOf(model);
     nowSongModel.value = playlist[currentIndex.value];
     updatePlayingWindow();
+    final checkCover = model.coverPath.isEmpty;
+    if (checkCover) {
+      model.mark();
+    }
   }
 
   static Future<void> startPlay() async {
