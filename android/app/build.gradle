@@ -43,11 +43,8 @@ android {
     }
 
     buildTypes {
-        debug {
-            // signingConfig signingConfigs.release
-        }
         release {
-            // signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
     }
 }
