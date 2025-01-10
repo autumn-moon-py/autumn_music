@@ -129,30 +129,35 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
 
   Widget _buildSearchBar() {
     return KeyboardDismisser(
-      child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: TextField(
-              controller: _searchController,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                hintText: "搜索",
-                border: InputBorder.none,
-              ),
-              onChanged: _updateSearchResults,
-              onTap: () {
-                if (Get.currentRoute == "/") {
-                  Get.to(() => searchP());
-                }
-              })),
-    );
+        child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: TextField(
+                controller: _searchController,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  hintText: "搜索",
+                  border: InputBorder.none,
+                ),
+                onChanged: _updateSearchResults)));
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildSearchBar();
+    return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child:
+                AppTheme.w("搜索", 25).padding(vertical: 10.h, horizontal: 25.w))
+        .gestures(onTap: () {
+      if (Get.currentRoute == "/") {
+        Get.to(() => searchP());
+      }
+    });
   }
 }
 
