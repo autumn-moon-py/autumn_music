@@ -101,10 +101,10 @@ class _MyHomePageState extends State<MyHomePage>
         items: SongManager.playlist.value,
         itemBuilder: songCard,
         searchMatcher: (item, query) {
-          if (item.name.contains(query)) {
+          if (item.name.toLowerCase().contains(query.toLowerCase())) {
             return true;
           }
-          if (item.artist.contains(query)) {
+          if (item.artist.toLowerCase().contains(query.toLowerCase())) {
             return true;
           }
           return false;

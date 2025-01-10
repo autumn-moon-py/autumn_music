@@ -119,7 +119,9 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
                 color: Colors.white,
                 onPressed: () {
                   _searchController.clear();
+                  _searchResults.clear();
                   FocusManager.instance.primaryFocus?.unfocus();
+                  Get.back();
                 })),
         body: SearchPage(
           searchResults: _searchResults,
@@ -151,8 +153,10 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(8),
             ),
-            child:
-                AppTheme.w("搜索", 25).padding(vertical: 10.h, horizontal: 25.w))
+            child: AppTheme.bk("搜索", 18)
+                .center()
+                .padding(vertical: 10.h)
+                .width(200.w))
         .gestures(onTap: () {
       if (Get.currentRoute == "/") {
         Get.to(() => searchP());
