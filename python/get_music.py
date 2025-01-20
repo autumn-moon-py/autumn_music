@@ -1,6 +1,11 @@
 import os
 import json
 
+import mutagen
+from mutagen.id3 import ID3, TIT2, TPE1, APIC
+import requests
+from io import BytesIO
+
 from tool import download_file, http_get, http_post, read_json, write_json
 
 # https://music.163.com/api/v6/playlist/detail?id=986150480
@@ -46,7 +51,8 @@ def format_song_list():
         name = song["name"]
         artists = [artist["name"] for artist in song["artists"]]
         url = netMP3Url(id)
-        data = {"id": id, "name": name, "artists": artists, "url": url}
+        cover = song["album"]["picUrl"]
+        data = {"id": id, "name": name, "artists": artists, "url": url, "cover": cover}
         format_song_list.append(data)
     write_json(format_song_list, "format_music_list")
 
@@ -62,6 +68,45 @@ def handle_new():
             break
     for j in range(i):
         music_list_new.append(music_list[j])
+
+
+def update_mp3_tags(mp3_path, song_info):
+    print(f"处理 {mp3_path}")
+    try:
+        try:
+            audio = ID3(mp3_path)
+        except mutagen.id3.ID3NoHeaderError:
+            audio = ID3()
+        if "name" in song_info:
+            audio["TIT2"] = TIT2(encoding=3, text=song_info["name"])
+
+        if "artists" in song_info:
+            if isinstance(song_info["artists"], list):
+                artists_str = " / ".join(song_info["artists"])
+            else:
+                artists_str = str(song_info["artists"])
+            audio["TPE1"] = TPE1(encoding=3, text=artists_str)
+
+        if "cover" in song_info:
+            response = requests.get(song_info["cover"])
+            if response.status_code == 200:
+                img_data = BytesIO(response.content).read()
+                audio["APIC"] = APIC(
+                    encoding=3,
+                    mime="image/jpeg",
+                    type=3,
+                    desc="Cover",
+                    data=img_data,
+                )
+            else:
+                print("封面图片下载失败")
+
+        audio.save(mp3_path)
+        return True
+
+    except Exception as e:
+        print(f"更新MP3标签时发生错误: {str(e)}")
+        return False
 
 
 def download_music():
@@ -85,6 +130,7 @@ def download_music():
             os.remove(music_file_path)
             print(f"{name}——下载失败")
         else:
+            update_mp3_tags(music_file_path, music)
             print(f"{name}——下载完成")
     if len(error_list) > 0:
         print(f"下载失败{len(error_list)}首")
