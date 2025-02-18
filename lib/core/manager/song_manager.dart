@@ -240,6 +240,24 @@ class SongManager {
     return playlist.where((element) => element.pendingProcessing).toList();
   }
 
-  static int get rdn =>
-      playlist.length <= 1 ? 0 : Random().nextInt(playlist.length - 1);
+  static final List<int> _history = [];
+  static const int _historyMaxSize = 10;
+  static int get rdn {
+    if (playlist.length <= 1) return 0;
+    final availableNumbers = List<int>.generate(
+      playlist.length,
+      (i) => i,
+    ).where((num) => !_history.contains(num)).toList();
+    if (availableNumbers.isEmpty) {
+      _history.clear();
+      return Random().nextInt(playlist.length - 1);
+    }
+    final result =
+        availableNumbers[Random().nextInt(availableNumbers.length - 1)];
+    _history.add(result);
+    if (_history.length > _historyMaxSize) {
+      _history.removeAt(0);
+    }
+    return result;
+  }
 }
