@@ -120,7 +120,7 @@ def download_music():
             music_artist += "-" + art
         music_url = music["url"]
         music_file_name = name + music_artist + ".mp3"
-        invalid_chars = ':*?"<>|[],'
+        invalid_chars = "?“”/\<>*|:"
         for char in invalid_chars:
             music_file_name = music_file_name.replace(char, "")
         music_file_path = os.path.join("music", music_file_name)
