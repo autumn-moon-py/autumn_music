@@ -167,12 +167,13 @@ class _SettingPageState extends State<SettingPage> {
       title: AppTheme.bk("获取更新歌曲", 16),
       trailing: AppTheme.bk(SongManager.tempList.length.toString(), 16),
       onTap: () async {
+        Global.t.p();
         final r2 = R2Cloud();
         await r2.init();
         SongManager.tempList = await r2.getNewSongList();
-        setState(() {});
         await SongManager.getCloudSongs();
         setState(() {});
+        Global.t.cancel();
       },
     );
   }
