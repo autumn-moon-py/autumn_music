@@ -8,7 +8,7 @@ from get_music import (
 from tool import clear_folder, remove_all_json_files, traverse_folder
 from r2_upload import upload_folder_to_s3, upload_update_song_list
 
-clear_folder("music")
+# clear_folder("music")
 remove_all_json_files()
 get_playlist()
 get_all_song_info()
@@ -18,3 +18,4 @@ download_music()
 traverse_folder("./music", "music/")
 upload_update_song_list()
 upload_folder_to_s3("music", "music")
+remove_all_json_files()

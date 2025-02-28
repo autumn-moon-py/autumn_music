@@ -13,7 +13,7 @@ from tool import download_file, http_get, http_post, read_json, write_json
 # https://music.163.com/song/media/outer/url?id={id}.mp3
 
 cookie = ""
-last = "喜头悲尾"
+last = "i believe"
 myPlaylistID = "986150480"
 
 netV6Url = "https://music.163.com/api/v6/playlist/detail"
