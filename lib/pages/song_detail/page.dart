@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -71,6 +73,7 @@ class _SongDetilsPageState extends State<SongDetilsPage> {
             Get.back();
             SongManager.next();
             model.deleteSong();
+            exit(0);
           }),
     ]).padding(vertical: 30.h);
   }
